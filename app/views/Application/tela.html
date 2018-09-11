@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Usuario</title>
+
+<meta charset="utf8">
+
+
+
+<script src="@{'/public/javascripts/jquery-3.3.1.min.js'}"
+	type="text/javascript" charset="utf8"></script>
+<link rel="stylesheet" media="screen"
+	href="@{'/public/stylesheets/main.css'}">
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@{'/public/stylesheets/dataTables.bootstrap.min.css'}">
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@{'/public/stylesheets/jquery.dataTables.min.css'}">
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@{'/public/stylesheets/bootstrap.min.css'}">
+
+
+
+<script type="text/javascript"
+	src="@{'/public/javascripts/bootstrap.min.js'}"></script>
+
+
+<link rel="shortcut icon" type="image/png"
+	href="@{'/public/images/favicon.png'}">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+       
+       		 
+       		 
+     $(document).ready(function(){
+   	   $('#teste').DataTable( { "bJQueryUI": true,
+               "oLanguage": {
+            	   
+                   "sProcessing":   "Processando...",
+                   "sLengthMenu":   "Mostrar _MENU_ registros",
+                   "sZeroRecords":  "Não foram encontrados resultados",
+                   "sInfo":         "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                   "sInfoEmpty":    "Mostrando de 0 até 0 de 0 registros",
+                   "sInfoFiltered": "",
+                   "sInfoPostFix":  "",
+                   "sSearch":       "Buscar:",
+                   "sUrl":          "",
+                   "oPaginate": {
+                       "sFirst":    "Primeiro",
+                       "sPrevious": "Anterior",
+                       "sNext":     "Seguinte",
+                       "sLast":     "Último"
+                   }
+               }
+   	               
+   	                  
+           }); 
+   	  
+   	   
+   	 	    
+   	});
+     
+     $(function () {
+    	  $('[data-toggle="tooltip"]').tooltip()
+    	})
+     
+     
+  
+     </script>
+
+</head>
+
+<body>
+
+
+	#{form @Login.logout()}
+	<div class="container">
+		<button type="submit" class="btn btn-danger pull-right" name="usuário"
+			onclick="return confirm('Deseja sair?')">
+			<span class="glyphicon glyphicon-off"></span>
+		</button>
+	</div>
+	#{/form}
+
+    
+     #{if usu?.status}
+	<div class="container">
+	
+		<button type="button"
+			class="btn btn-primary pull-left "
+			data-toggle="modal" data-target="#janela"><i class="glyphicon glyphicon-plus"></i> Novo Usuário</button>
+	</div>
+	#{/if} #{else}#{/else}
+    
+
+<br>
+	<div class="container">
+
+		<div class="row">
+			#{if flash.error}
+			<div class="alert alert-danger">
+				<a class="close" data-dismiss="alert">&times;</a> ${flash.error}
+			</div>
+			#{/if} #{if flash.success}
+			<div class="alert alert-success">
+				<a class="close" data-dismiss="alert">&times;</a> ${flash.success}
+			</div>
+			#{/if}
+		</div>
+
+
+	</div>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<h3>Tabela de Usuários</h3>
+			</div>
+			<!--// .col-md-6 -->
+		</div>
+		<!--// .row -->
+
+		<div class="row">
+			<div class="table-responsive">
+				<table id="teste"
+					class="table table-bordered table-condensed table-striped">
+					<thead>
+					#{a @Login.tentaLogin()} 
+						<tr>
+							<th>ID</th>
+							<th>Nome</th>
+							<th>Email</th>
+							<th>Telefone</th>
+							#{if usu?.status}
+							<th class="text-center">Ações</th>
+							<th class="text-center">Permissões</th>
+							<th class="text-center">Ativo</th>
+							#{/if} #{else}#{/else}
+						</tr>
+					</thead>
+					<tbody>
+						#{list usuarios , as:'usuario'}
+						<tr>
+							<td>${usuario?.id}</td>
+							<td>${usuario?.nome}</td>
+							<td>${usuario?.email}</td>
+							<td>${usuario?.telefone}</td>
+							#{if usu?.status}
+							<td class="text-center"> <a
+								href="/UsuarioController/alterarUsuario?id=${usuario.id}"
+								data-toggle="modal" data-target="#janela45">
+									<Button class="btn btn-primary" data-toggle="tooltip"
+										data-placement="top" title="Editar">
+										<span class="glyphicon glyphicon-pencil text-white"
+											aria-hidden="true"></span>
+									</Button>
+							</a><a href="/UsuarioController/deletarUsuario?id=${usuario.id}" 
+								onclick="return confirm('Tem certeza?')">
+									<Button class="btn btn-danger" data-toggle="tooltip"
+										data-placement="top" title="Excluir">
+										<span class="glyphicon glyphicon-trash text-white"
+											aria-hidden="true"></span>
+									</Button>
+							</a></td>
+                                 
+
+
+							<td class="text-center">#{if usuario?.status ==true} <span
+								class="glyphicon glyphicon-king text-success" aria-hidden="true"
+								data-toggle="tooltip" data-placement="top" title="Administrador"></span>
+								#{/if} #{else} <span class="glyphicon glyphicon-user"
+								aria-hidden="true" data-toggle="tooltip" data-placement="top"
+								title="Usuário"></span> #{/else}
+							</td>
+
+
+							<td class="text-center">#{if usuario?.ativo ==true} <Span
+								class="glyphicon glyphicon-ok-sign text-success"
+								aria-hidden="true"></span> #{/if} #{else} <span
+								class="glyphicon glyphicon-remove-sign text-danger"
+								aria-hidden="true" data-toggle="tooltip" data-placement="top"
+								title="Usuário"></span> #{/else}
+							</td>
+							 #{/if} #{else} #{/else}
+						</tr>
+						#{/list}
+						#{/a}
+					</tbody>
+				</table>
+			</div>
+			<!--// .col-md-6 -->
+
+
+
+
+
+			<!-- Janela -->
+			<form action="@{UsuarioController.addUsuario}" method="post"
+				class="modal fade" data-backdrop="static" id="janela">
+
+				<div class="modal-dialog modal-lg ">
+					<div class="modal-content">
+
+						<!-- cabecalho -->
+						<div class="modal-header">
+
+							<h4 class="modal-title">Cadastrar Usuário</h4>
+						</div>
+
+						<!-- corpo -->
+						<div class="modal-body">
+
+							<div class="form-group">
+								<label for="nome">Nome</label> <input type="text" name="nome"
+									id="nome_cliente" class="form-control"
+									placeholder="Digite o Nome" required>
+							</div>
+
+							<div class="form-group">
+								<label for="email">E-mail</label> <input type="email"
+									name="email" id="email_cliente" class="form-control"
+									placeholder="(exemplo@exemplo)" required>
+							</div>
+
+							<div class="form-group">
+								<label for="telefone">Telefone (formato: xx-xxxx-xxxx)</label> <input
+									type="tel" pattern="^\d{2}-\d{4}-\d{4}$" name="telefone"
+									id="telefone_cliente" class="form-control"
+									placeholder="(xx-xxxx-xxxx)" required>
+							</div>
+
+							<div class="form-group">
+								<label for="senha">Senha</label> <input type="password"
+									name="senha" id="Senha" class="form-control"
+									placeholder="Digite a Senha" required>
+							</div>
+
+							<div class="form-group">
+								<label>Permissão</label> <select name="status"
+									style="width: 150px" class="form-control" id="sel1">
+									<option value="true">Administrador</option>
+									<option value="false">Usuário</option>
+
+								</select>
+							</div>
+
+						</div>
+
+						<!-- rodape -->
+						<div class="modal-footer">
+
+
+
+
+							<input type="submit" value="Salvar" class="btn btn-primary"  /> <a
+								href="/UsuarioController/atualizarTabela" data-dismiss="modal1"
+								class="btn btn-default">Cancelar</a>
+
+						</div>
+
+					</div>
+				</div>
+
+			</form>
+
+
+
+
+		</div>
+		<!--// .row -->
+	</div>
+	<!--// .container -->
+
+	<form class="modal fade" id="janela45"
+		action="@{UsuarioController.atualizarUsuario}" method="post">
+
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+
+				<!-- cabecalho -->
+				<div class="modal-header">
+
+					<h4 class="modal-title">Editar Cliente</h4>
+				</div>
+
+				<!-- corpo -->
+
+
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label for="nome">Nome</label> <input type="text"
+							class="form-control" name="nome">
+					</div>
+
+					<div class="form-group">
+						<label for="email">E-mail</label> <input type="Text"
+							class="form-control" name="email">
+					</div>
+
+
+					<div class="form-group">
+						<label for="telefone">Telefone</label> <input type="text"
+							class="form-control" name="telefone">
+					</div>
+
+				</div>
+
+				<!-- rodape -->
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Cancelar</button>
+
+					<input type="submit" value="Salvar" class="btn btn-warning" onclick="alert('Salvo com Sucesso!')" />
+
+				</div>
+
+			</div>
+		</div>
+
+	</form>
+
+
+	<script src="@{'/public/javascripts/jquery-3.3.1.min.js'}"
+		type="text/javascript" charset="utf8"></script>
+
+	<script src="@{'/public/javascripts/jquery.dataTables.min.js'}"
+		type="text/javascript" charset="utf8"></script>
+	<script src="@{'/public/javascripts/dataTables.bootstrap.min.js'}"
+		type="text/javascript" charset="utf8"></script>
+
+	<script src="@{'/public/javascripts/bootstrap.min.js'}"
+		type="text/javascript" charset="utf8"></script>
+	<script src="@{'/public/javascripts/dropdown.js'}"
+		type="text/javascript" charset="utf8"></script>
+
+
+
+
+
+</body>
+</html>
